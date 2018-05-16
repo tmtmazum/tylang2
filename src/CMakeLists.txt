@@ -48,3 +48,4 @@ add_executable(ty_unit_tests ${unit_tests_src})
 target_link_libraries(ty_unit_tests tycommon typarse tycgen tytoken gtest)
 target_include_directories(ty_unit_tests PRIVATE ../src/gtest)
 
+add_custom_command(TARGET ty_unit_tests POST_BUILD COMMAND "$(TargetDir)$(TargetFileName)\nexit 0")
