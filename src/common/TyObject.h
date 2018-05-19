@@ -2,6 +2,8 @@
 
 #include <cinttypes>
 #include <type_traits>
+#include <exception>
+#include <string>
 
 namespace ty { namespace Attribute
 {
@@ -45,7 +47,17 @@ static T& Global()
 	return object;
 }
 
-} // namespace ty::Attribute
+class TyException : public std::exception
+{
+	std::string m_name;
+public:
+	explicit TyException(std::string wh)
+		: m_name{ std::move(wh) } {}
+
+	const char* what() const override { return m_name.c_str(); }
+};
+
+} // namespace ty
 
 // -- Logging/Debugging Macros --
 
