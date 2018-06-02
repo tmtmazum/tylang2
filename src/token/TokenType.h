@@ -2,17 +2,6 @@
 
 namespace ty
 {
-	//enum class TokenType
-	//{
-	//	ID,
-	//	INT_LITERAL,
-	//	PAREN_OPEN,
-	//	PAREN_CLOSE,
-	//	BRACE_OPEN,
-	//	BRACE_CLOSE,
-	//	END_OF_FILE
-	//};
-
 	enum class TokenType : uint64_t
 	{ 
 		UNKNOWN, 

@@ -11,7 +11,7 @@ namespace ty
 enum class TokenType : uint64_t;
 
 //! A Token is only valid as long as the parent TyTokenizer is alive
-class Token : public TyVirtual<TyObject<>>
+class Token : public TyObject<>
 {
 	TokenType							m_type;
 

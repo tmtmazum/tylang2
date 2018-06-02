@@ -32,7 +32,7 @@ char const* Token::as_string(TokenType t)
 
 void TyTokenizerConfig::add(TokenType tt, std::string s)
 {
-	TY_ASSERTF(s.size(), "Cannot empty token with empty matcher lexeme");
+	TY_ASSERTF(s.size(), "Cannot add token with empty matcher lexeme");
 	auto& v = m_tokens[s[0]];
 	v.emplace_back(std::move(s), tt);
 }
