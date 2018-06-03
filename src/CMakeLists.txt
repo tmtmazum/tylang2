@@ -41,11 +41,18 @@ target_link_libraries(tyd tycommon typarse tycgen tytoken)
 file(GLOB gtest_src ./gtest/*.cc)
 file(GLOB gtest_hdr ./gtest/*.h)
 add_library(gtest STATIC ${gtest_src} ${gtest_hdr})
+target_include_directories(gtest PRIVATE ./gtest)
 
 # unit tests
 file(GLOB unit_tests_src ./unit_tests/*.cpp)
 add_executable(ty_unit_tests ${unit_tests_src})
 target_link_libraries(ty_unit_tests tycommon typarse tycgen tytoken gtest)
 target_include_directories(ty_unit_tests PRIVATE ../src/gtest)
+if (UNIX)
+  target_link_libraries(ty_unit_tests pthread)
+  add_custom_command(TARGET ty_unit_tests POST_BUILD COMMAND "../bin/ty_unit_tests")
+endif (UNIX)
 
+if (WIN32)
 add_custom_command(TARGET ty_unit_tests POST_BUILD COMMAND "$(TargetDir)$(TargetFileName)\nexit 0")
+endif (WIN32)

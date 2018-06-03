@@ -54,7 +54,7 @@ public:
 	explicit TyException(std::string wh)
 		: m_name{ std::move(wh) } {}
 
-	const char* what() const override { return m_name.c_str(); }
+	const char* what() const noexcept override { return m_name.c_str(); }
 };
 
 } // namespace ty

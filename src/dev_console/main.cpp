@@ -39,6 +39,6 @@ int main(int argc, char** argv) try
 } 
 catch(...)
 {
-	TY_STDERR("Unknown exception occurred.");
+	TY_STDERR("Unknown exception occurred.%c", ' ');
 	return EXIT_FAILURE;
 }

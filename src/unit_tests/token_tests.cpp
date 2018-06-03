@@ -3,6 +3,12 @@
 #include "token/TokenException.h"
 #include <gtest/gtest.h>
 
+#ifdef _MSC_VER
+#   define DEBUG_BREAK() __debugbreak()
+#else
+#   define DEBUG_BREAK()
+#endif
+
 using namespace ty;
 
 TEST(sanity, sanity)
@@ -196,6 +202,6 @@ int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
 	auto a = RUN_ALL_TESTS();
-	__debugbreak();
+	DEBUG_BREAK();
 	return a;
 }

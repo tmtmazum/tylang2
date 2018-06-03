@@ -21,7 +21,7 @@ namespace ty
 		{
 			return std::make_unique<std::string>(option_name.substr(2));
 		}
-		return false;
+		return nullptr;
 	}
 
 	class TyCommandBase : public TyVirtual<TyObject<>>
