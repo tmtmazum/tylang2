@@ -53,6 +53,7 @@ class TokenizeCmd : public TyCommandBase
 
       if (m_mode == mode::from_stdin)
       {
+         return execute_from_stdin();
       }
 
       if (m_mode == mode::from_arg)
@@ -67,6 +68,7 @@ class TokenizeCmd : public TyCommandBase
 
  private:
    bool execute_from_string(std::string const& arg) const;
+   bool execute_from_stdin() const;
 };
 
 class TyDevConsole : public TyGenericConsole
