@@ -1,0 +1,12 @@
+BasedOnStyle: Mozilla
+AllowShortFunctionsOnSingleLine: All
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: true
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBraces: Allman
+ColumnLimit: 120
+UseTab: Never
+IndentWidth: 2
+TabWidth: 2
