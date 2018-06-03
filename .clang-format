@@ -1,5 +1,5 @@
 BasedOnStyle: Mozilla
-AllowShortFunctionsOnSingleLine: All
+AllowShortFunctionsOnASingleLine: All
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: true
@@ -8,5 +8,5 @@ BinPackParameters: true
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 UseTab: Never
-IndentWidth: 2
-TabWidth: 2
+IndentWidth: 3
+TabWidth: 3
