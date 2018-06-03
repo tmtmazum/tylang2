@@ -9,7 +9,7 @@ namespace ty
 {
 	/* Free Functions*/
 
-	std::unique_ptr<std::string> extract_as_option(std::string const& option_name)
+	inline std::unique_ptr<std::string> extract_as_option(std::string const& option_name)
 	{
 		if (option_name.empty()) return nullptr;
 		if (option_name[0] == '/')
@@ -30,6 +30,8 @@ namespace ty
 		virtual bool add_option(std::string const& option_name) = 0;
 
 		virtual bool add_target(std::string const& command_name) = 0;
+
+    virtual bool execute() const = 0;
 
 		virtual void print_help() const = 0;
 	};
@@ -63,3 +65,4 @@ namespace ty
 	};
 
 } // namespace ty
+

@@ -35,6 +35,7 @@ int main(int argc, char** argv) try
 			return EXIT_FAILURE;
 		}
 	}	
+  TY_STDOUT("Command '%s' completed with %s", argv[1], cmd->execute() ? "success" : "failure");
 	return EXIT_SUCCESS;
 } 
 catch(...)
