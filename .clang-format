@@ -1,5 +1,5 @@
 BasedOnStyle: Mozilla
-AllowShortFunctionsOnSingleLine: All
+AllowShortFunctionsOnASingleLine: All
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: true

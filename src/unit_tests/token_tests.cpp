@@ -1,207 +1,197 @@
-#include "token/TyTokenizer.h"
-#include "token/TokenType.h"
 #include "token/TokenException.h"
+#include "token/TokenType.h"
+#include "token/TyTokenizer.h"
 #include <gtest/gtest.h>
 
 #ifdef _MSC_VER
-#   define DEBUG_BREAK() __debugbreak()
+#define DEBUG_BREAK() __debugbreak()
 #else
-#   define DEBUG_BREAK()
+#define DEBUG_BREAK()
 #endif
 
 using namespace ty;
 
-TEST(sanity, sanity)
-{
-	EXPECT_EQ(1, 1);
-}
+TEST(sanity, sanity) { EXPECT_EQ(1, 1); }
 
 TEST(tokenizer, empty)
 try
 {
-	TyTokenizer t{ TyTokenizerConfig{} };
-	auto list = t.tokenize("");
-	ASSERT_EQ(1, list.size());
-	ASSERT_EQ(TokenType::END_OF_FILE, list[0]);
+  TyTokenizer t{ TyTokenizerConfig{} };
+  auto list = t.tokenize("");
+  ASSERT_EQ(1, list.size());
+  ASSERT_EQ(TokenType::END_OF_FILE, list[0]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
 
 TEST(tokenizer, ambiguous_symbols)
 try
 {
-	TyTokenizerConfig cfg;
-	cfg.add(TokenType::MINUS, "-");
-	cfg.add(TokenType::DECREMENT, "--");
-	cfg.add(TokenType::MINUS_EQ, "-=");
-	cfg.add(TokenType::ARROW, "->");
-	cfg.add(TokenType::EQ, "=");
-	cfg.add(TokenType::CHECK_EQ, "==");
+  TyTokenizerConfig cfg;
+  cfg.add(TokenType::MINUS, "-");
+  cfg.add(TokenType::DECREMENT, "--");
+  cfg.add(TokenType::MINUS_EQ, "-=");
+  cfg.add(TokenType::ARROW, "->");
+  cfg.add(TokenType::EQ, "=");
+  cfg.add(TokenType::CHECK_EQ, "==");
 
-	TyTokenizer t{ std::move(cfg) };
-	auto list = t.tokenize("a -= b - --c->data--");
-	int i = 0;
-	ASSERT_EQ(TokenType::ID, list[i++]);
-	ASSERT_EQ(TokenType::MINUS_EQ, list[i++]);
-	ASSERT_EQ(TokenType::ID, list[i++]);
-	ASSERT_EQ(TokenType::MINUS, list[i++]);
-	ASSERT_EQ(TokenType::DECREMENT, list[i++]);
-	ASSERT_EQ(TokenType::ID, list[i++]);
-	ASSERT_EQ(TokenType::ARROW, list[i++]);
-	ASSERT_EQ(TokenType::ID, list[i++]);
-	ASSERT_EQ(TokenType::DECREMENT, list[i++]);
-	ASSERT_EQ(TokenType::END_OF_FILE, list[i++]);
+  TyTokenizer t{ std::move(cfg) };
+  auto list = t.tokenize("a -= b - --c->data--");
+  int i = 0;
+  ASSERT_EQ(TokenType::ID, list[i++]);
+  ASSERT_EQ(TokenType::MINUS_EQ, list[i++]);
+  ASSERT_EQ(TokenType::ID, list[i++]);
+  ASSERT_EQ(TokenType::MINUS, list[i++]);
+  ASSERT_EQ(TokenType::DECREMENT, list[i++]);
+  ASSERT_EQ(TokenType::ID, list[i++]);
+  ASSERT_EQ(TokenType::ARROW, list[i++]);
+  ASSERT_EQ(TokenType::ID, list[i++]);
+  ASSERT_EQ(TokenType::DECREMENT, list[i++]);
+  ASSERT_EQ(TokenType::END_OF_FILE, list[i++]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
 
 TEST(tokenizer, empty_ws)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(  
+  TyTokenizer t;
+  auto list = t.tokenize(R"(  
 	)");
-	ASSERT_EQ(1, list.size());
-	ASSERT_EQ(TokenType::END_OF_FILE, list[0]);
+  ASSERT_EQ(1, list.size());
+  ASSERT_EQ(TokenType::END_OF_FILE, list[0]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
 
 TEST(tokenizer, int_literal)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(12512)");
-	ASSERT_EQ(2, list.size());
-	ASSERT_EQ(TokenType::INT_LITERAL, list[0]);
-	ASSERT_EQ(TokenType::END_OF_FILE, list[1]);
+  TyTokenizer t;
+  auto list = t.tokenize(R"(12512)");
+  ASSERT_EQ(2, list.size());
+  ASSERT_EQ(TokenType::INT_LITERAL, list[0]);
+  ASSERT_EQ(TokenType::END_OF_FILE, list[1]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
-
 
 TEST(tokenizer, int_literal_2)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(125 12)");
-	ASSERT_EQ(3, list.size());
-	ASSERT_EQ(TokenType::INT_LITERAL, list[0]);
-	ASSERT_EQ(TokenType::INT_LITERAL, list[1]);
-	ASSERT_EQ(TokenType::END_OF_FILE, list[2]);
+  TyTokenizer t;
+  auto list = t.tokenize(R"(125 12)");
+  ASSERT_EQ(3, list.size());
+  ASSERT_EQ(TokenType::INT_LITERAL, list[0]);
+  ASSERT_EQ(TokenType::INT_LITERAL, list[1]);
+  ASSERT_EQ(TokenType::END_OF_FILE, list[2]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
 
 TEST(tokenizer, id_underscore)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(Hello_my_name)");
-	ASSERT_EQ(2, list.size());
-	ASSERT_EQ(TokenType::END_OF_FILE, list.back());
-	ASSERT_EQ(TokenType::ID, list[0]);
-	ASSERT_STREQ("Hello_my_name", list[0].value().c_str());
+  TyTokenizer t;
+  auto list = t.tokenize(R"(Hello_my_name)");
+  ASSERT_EQ(2, list.size());
+  ASSERT_EQ(TokenType::END_OF_FILE, list.back());
+  ASSERT_EQ(TokenType::ID, list[0]);
+  ASSERT_STREQ("Hello_my_name", list[0].value().c_str());
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
 
 TEST(tokenizer, id2)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(Hello_my_name is_)");
-	ASSERT_EQ(3, list.size());
-	ASSERT_EQ(TokenType::END_OF_FILE, list.back());
-	ASSERT_EQ(TokenType::ID, list[0]);
-	ASSERT_EQ(TokenType::ID, list[1]);
+  TyTokenizer t;
+  auto list = t.tokenize(R"(Hello_my_name is_)");
+  ASSERT_EQ(3, list.size());
+  ASSERT_EQ(TokenType::END_OF_FILE, list.back());
+  ASSERT_EQ(TokenType::ID, list[0]);
+  ASSERT_EQ(TokenType::ID, list[1]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
 
 TEST(tokenizer, words_and_numbers)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(The quick brown fox jumped over 112 ducks)");
-	ASSERT_EQ(9, list.size());
-	ASSERT_EQ(TokenType::END_OF_FILE, list.back());
-	ASSERT_EQ(TokenType::ID, list[1]);
-	ASSERT_EQ(TokenType::ID, list[list.size()-2]);
-	ASSERT_EQ(TokenType::INT_LITERAL, list[list.size()-3]);
+  TyTokenizer t;
+  auto list = t.tokenize(R"(The quick brown fox jumped over 112 ducks)");
+  ASSERT_EQ(9, list.size());
+  ASSERT_EQ(TokenType::END_OF_FILE, list.back());
+  ASSERT_EQ(TokenType::ID, list[1]);
+  ASSERT_EQ(TokenType::ID, list[list.size() - 2]);
+  ASSERT_EQ(TokenType::INT_LITERAL, list[list.size() - 3]);
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
-
 
 TEST(tokenizer, composite0)
 try
 {
-	TyTokenizer t;
-	auto list = t.tokenize(R"(foo = @(a, b) { c = a + b; return c; })");
-	ASSERT_EQ(TokenType::END_OF_FILE, list.back());
-	int i = 0;
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::EQ, list.at(i++));
-	ASSERT_EQ(TokenType::AT, list.at(i++));
-	ASSERT_EQ(TokenType::PAREN_OPEN, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::COMMA, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::PAREN_CLOSE, list.at(i++));
-	ASSERT_EQ(TokenType::BRACE_OPEN, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::EQ, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::PLUS, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::SEMICOLON, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::ID, list.at(i++));
-	ASSERT_EQ(TokenType::SEMICOLON, list.at(i++));
-	ASSERT_EQ(TokenType::BRACE_CLOSE, list.at(i++));
-	ASSERT_EQ(TokenType::END_OF_FILE, list.at(i++));
-	ASSERT_EQ(i, list.size());
+  TyTokenizer t;
+  auto list = t.tokenize(R"(foo = @(a, b) { c = a + b; return c; })");
+  ASSERT_EQ(TokenType::END_OF_FILE, list.back());
+  int i = 0;
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::EQ, list.at(i++));
+  ASSERT_EQ(TokenType::AT, list.at(i++));
+  ASSERT_EQ(TokenType::PAREN_OPEN, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::COMMA, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::PAREN_CLOSE, list.at(i++));
+  ASSERT_EQ(TokenType::BRACE_OPEN, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::EQ, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::PLUS, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::SEMICOLON, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::ID, list.at(i++));
+  ASSERT_EQ(TokenType::SEMICOLON, list.at(i++));
+  ASSERT_EQ(TokenType::BRACE_CLOSE, list.at(i++));
+  ASSERT_EQ(TokenType::END_OF_FILE, list.at(i++));
+  ASSERT_EQ(i, list.size());
 }
 catch (TokenException const& e)
 {
-	e.log_to_stdout();
-	ASSERT_FALSE(true);
+  e.log_to_stdout();
+  ASSERT_FALSE(true);
 }
 
 int main(int argc, char** argv)
 {
-	::testing::InitGoogleTest(&argc, argv);
-	auto a = RUN_ALL_TESTS();
-	DEBUG_BREAK();
-	return a;
+  ::testing::InitGoogleTest(&argc, argv);
+  auto a = RUN_ALL_TESTS();
+  DEBUG_BREAK();
+  return a;
 }
